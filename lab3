@@ -1,0 +1,299 @@
+/**
+ * Класс хот-дога "HunterDog"
+ * Наследует абстрактный класс HotDog
+ */
+public class HunterDog extends HotDog {
+
+    /**
+     * Конструктор хот-дога HunterDog
+     */
+    public HunterDog() {
+        super("HunterDog");
+        initializeComponents();
+    }
+
+    /**
+     * Инициализация компонентов для HunterDog
+     */
+    @Override
+    protected void initializeComponents() {
+        // Стандартные компоненты
+        addComponent("Булочка", 20.0);
+        addComponent("Сосиска", 30.0);
+        addComponent("Соус", 10.0);
+    }
+}
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Главный класс программы
+ * Содержит всю логику учета покупок
+ */
+public class Main {
+
+    public static void main(String[] args) {
+        System.out.println("=== ПРОГРАММА УЧЁТА ПОКУПОК ХОТ-ДОГОВ ===\n");
+
+        // 1.3 Продать каждый вид хот-дога
+        System.out.println("1. ПРОДАЕМ КАЖДЫЙ ВИД ХОТ-ДОГА:");
+
+        // Создаем хот-доги (используем полиморфизм)
+        HotDog hunterDog = new HunterDog();
+        HotDog masterDog = new MasterDog();
+        HotDog berlinka = new Berlinka();
+
+        System.out.println("   - Создан: " + hunterDog);
+        System.out.println("   - Создан: " + masterDog);
+        System.out.println("   - Создан: " + berlinka);
+
+        // Показываем подробности каждого хот-дога
+        System.out.println("\nПодробности хот-догов:");
+        hunterDog.printDetails();
+        masterDog.printDetails();
+        berlinka.printDetails();
+
+        // 1.2 Продать отдельные компоненты
+        System.out.println("2. ПРОДАЁМ ОТДЕЛЬНЫЕ КОМПОНЕНТЫ:");
+
+        // Список для хранения отдельных компонентов
+        List<String> individualComponents = new ArrayList<>();
+        List<Double> individualPrices = new ArrayList<>();
+
+        // Добавляем отдельные компоненты
+        individualComponents.add("Булочка");
+        individualPrices.add(20.0);
+
+        individualComponents.add("Сосиска");
+        individualPrices.add(30.0);
+
+        individualComponents.add("Соус");
+        individualPrices.add(10.0);
+
+        individualComponents.add("Сыр");
+        individualPrices.add(15.0);
+
+        // Выводим отдельные компоненты
+        for (int i = 0; i < individualComponents.size(); i++) {
+            System.out.println("   - " + individualComponents.get(i) +
+                    " (" + individualPrices.get(i) + " руб.)");
+        }
+
+        // 1.4 Подсчитать общую сумму всех заказов
+        System.out.println("\n3. ПОДСЧЁТ ОБЩЕЙ СУММЫ:");
+
+        // Создаем список всех хот-догов для подсчета
+        List<HotDog> allHotDogs = new ArrayList<>();
+        allHotDogs.add(hunterDog);
+        allHotDogs.add(masterDog);
+        allHotDogs.add(berlinka);
+
+        // Добавляем еще несколько хот-догов для примера
+        allHotDogs.add(new HunterDog());
+        allHotDogs.add(new MasterDog());
+
+        // Подсчет общей суммы хот-догов
+        double totalHotDogsPrice = 0;
+        for (HotDog dog : allHotDogs) {
+            totalHotDogsPrice += dog.getTotalPrice();
+        }
+
+        // Подсчет общей суммы отдельных компонентов
+        double totalComponentsPrice = 0;
+        for (double price : individualPrices) {
+            totalComponentsPrice += price;
+        }
+
+        // Общая сумма
+        double totalSum = totalHotDogsPrice + totalComponentsPrice;
+        System.out.println("   - Сумма всех хот-догов: " + totalHotDogsPrice + " руб.");
+        System.out.println("   - Сумма отдельных компонентов: " + totalComponentsPrice + " руб.");
+        System.out.println("   - ОБЩАЯ СУММА: " + totalSum + " руб.");
+
+        // 1.5 Подсчитать количество полных заказов
+        System.out.println("\n4. КОЛИЧЕСТВО ПОЛНЫХ ЗАКАЗОВ:");
+        int fullOrdersCount = allHotDogs.size();
+        System.out.println("   - Полных заказов (хот-догов): " + fullOrdersCount + " шт.");
+
+        // 1.6 Подсчитать среднюю стоимость заказов
+        System.out.println("\n5. СРЕДНЯЯ СТОИМОСТЬ ЗАКАЗОВ:");
+        int totalItems = allHotDogs.size() + individualComponents.size();
+        if (totalItems > 0) {
+            double averagePrice = totalSum / totalItems;
+            System.out.println("   - Всего позиций: " + totalItems + " шт.");
+            System.out.println("   - СРЕДНЯЯ СТОИМОСТЬ: " +
+                    String.format("%.2f", averagePrice) + " руб.");
+        } else {
+            System.out.println("   - Нет заказов для подсчета средней стоимости");
+        }
+
+        // Демонстрация полиморфизма
+        System.out.println("\n6. ДЕМОНСТРАЦИЯ ПОЛИМОРФИЗМА:");
+        System.out.println("   Тип hunterDog: " + hunterDog.getClass().getSimpleName());
+        System.out.println("   Тип masterDog: " + masterDog.getClass().getSimpleName());
+        System.out.println("   Тип berlinka: " + berlinka.getClass().getSimpleName());
+
+        // Вызов методов через абстрактный тип HotDog
+        System.out.println("   hunterDog.getTotalPrice() = " + hunterDog.getTotalPrice() + " руб.");
+        System.out.println("   masterDog.getTotalPrice() = " + masterDog.getTotalPrice() + " руб.");
+        System.out.println("   berlinka.getTotalPrice() = " + berlinka.getTotalPrice() + " руб.");
+
+        System.out.println("\n=== ПРОГРАММА ЗАВЕРШЕНА ===");
+    }
+}
+/**
+ * Класс хот-дога "MasterDog"
+ * Наследует абстрактный класс HotDog
+ */
+public class MasterDog extends HotDog {
+
+    /**
+     * Конструктор хот-дога MasterDog
+     */
+    public MasterDog() {
+        super("MasterDog");
+        initializeComponents();
+    }
+
+    /**
+     * Инициализация компонентов для MasterDog
+     */
+    @Override
+    protected void initializeComponents() {
+        // Стандартные компоненты (две сосиски)
+        addComponent("Булочка", 20.0);
+        addComponent("Сосиска", 30.0);
+        addComponent("Сосиска", 30.0);  // Вторая сосиска
+        addComponent("Соус", 10.0);
+    }
+}
+
+/**
+ * Класс хот-дога "Berlinka"
+ * Наследует абстрактный класс HotDog
+ */
+public class Berlinka extends HotDog {
+
+    /**
+     * Конструктор хот-дога Berlinka
+     */
+    public Berlinka() {
+        super("Berlinka");
+        initializeComponents();
+    }
+
+    /**
+     * Инициализация компонентов для Berlinka
+     */
+    @Override
+    protected void initializeComponents() {
+        // Стандартные компоненты (двойной соус)
+        addComponent("Булочка", 20.0);
+        addComponent("Сосиска", 30.0);
+        addComponent("Соус", 10.0);
+        addComponent("Соус", 10.0);  // Двойной соус
+    }
+}
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Абстрактный класс для всех видов хот-догов
+ * Содержит общую логику для всех хот-догов
+ */
+public abstract class HotDog {
+    protected String name;
+    protected List<String> components;
+    protected List<Double> prices;
+
+    /**
+     * Конструктор абстрактного класса HotDog
+     * @param name название хот-дога
+     */
+    public HotDog(String name) {
+        this.name = name;
+        this.components = new ArrayList<>();
+        this.prices = new ArrayList<>();
+    }
+
+    /**
+     * Абстрактный метод для инициализации компонентов
+     * Каждый конкретный хот-дог должен реализовать этот метод
+     */
+    protected abstract void initializeComponents();
+
+    /**
+     * Получить общую стоимость хот-дога
+     * @return общая стоимость
+     */
+    public double getTotalPrice() {
+        double total = 0;
+        for (double price : prices) {
+            total += price;
+        }
+        return total;
+    }
+
+    /**
+     * Получить название хот-дога
+     * @return название
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Получить список компонентов
+     * @return список компонентов
+     */
+    public List<String> getComponents() {
+        return new ArrayList<>(components); // Возвращаем копию для безопасности
+    }
+
+    /**
+     * Получить список цен компонентов
+     * @return список цен
+     */
+    public List<Double> getPrices() {
+        return new ArrayList<>(prices); // Возвращаем копию для безопасности
+    }
+
+    /**
+     * Добавить компонент к хот-догу
+     * @param component название компонента
+     * @param price цена компонента
+     */
+    protected void addComponent(String component, double price) {
+        components.add(component);
+        prices.add(price);
+    }
+
+    @Override
+    public String toString() {
+        return name + " - " + getTotalPrice() + " руб.";
+    }
+
+    /**
+     * Вывести подробную информацию о хот-доге
+     */
+    public void printDetails() {
+        System.out.println("Хот-дог: " + name);
+        System.out.println("Компоненты:");
+        for (int i = 0; i < components.size(); i++) {
+            System.out.println("  - " + components.get(i) + " (" + prices.get(i) + " руб.)");
+        }
+        System.out.println("Итого: " + getTotalPrice() + " руб.");
+        System.out.println("---");
+    }
+}
