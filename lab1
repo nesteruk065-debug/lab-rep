@@ -1,0 +1,318 @@
+public class Student {
+    private int id;
+    private String lastName;
+    private String firstName;
+    private String middleName;
+    private int birthYear;
+    private String address;
+    private String phone;
+    private String faculty;
+    private int course;
+    private String group;
+
+    // Конструктор с параметрами
+    public Student(int id, String lastName, String firstName, String middleName,
+                   int birthYear, String address, String phone,
+                   String faculty, int course, String group) {
+        this.id = id;
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.birthYear = birthYear;
+        this.address = address;
+        this.phone = phone;
+        this.faculty = faculty;
+        this.course = course;
+        this.group = group;
+    }
+
+    // Методы SET
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public void setBirthYear(int birthYear) {
+        this.birthYear = birthYear;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setFaculty(String faculty) {
+        this.faculty = faculty;
+    }
+
+    public void setCourse(int course) {
+        this.course = course;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    // Методы GET
+    public int getId() {
+        return id;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public int getBirthYear() {
+        return birthYear;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getFaculty() {
+        return faculty;
+    }
+
+    public int getCourse() {
+        return course;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    // Метод toString
+    public String toString() {
+        return String.format("ID: %d, ФИО: %s %s %s, Год рождения: %d, " +
+                        "Адрес: %s, Телефон: %s, Факультет: %s, Курс: %d, Группа: %s",
+                id, lastName, firstName, middleName, birthYear,
+                address, phone, faculty, course, group);
+    }
+}
+import java.util.Scanner;
+
+public class Main {
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        // Создаем массив студентов
+        Student[] students = createTestStudents();
+
+        System.out.println("=== СИСТЕМА УПРАВЛЕНИЯ СТУДЕНТАМИ ===");
+
+        while (true) {
+            System.out.println("\nМЕНЮ:");
+            System.out.println("1. Показать всех студентов");
+            System.out.println("2. Список студентов заданного факультета");
+            System.out.println("3. Списки студентов для каждого факультета и курса");
+            System.out.println("4. Список студентов, родившихся после заданного года");
+            System.out.println("5. Список учебной группы");
+            System.out.println("0. Выход");
+            System.out.print("Выберите пункт: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // очистка буфера
+
+            switch (choice) {
+                case 1:
+                    printAllStudents(students);
+                    break;
+
+                case 2:
+                    System.out.print("Введите факультет: ");
+                    String faculty = scanner.nextLine();
+                    printStudentsByFaculty(students, faculty);
+                    break;
+
+                case 3:
+                    printStudentsByFacultyAndCourse(students);
+                    break;
+
+                case 4:
+                    System.out.print("Введите год: ");
+                    int year = scanner.nextInt();
+                    printStudentsBornAfterYear(students, year);
+                    break;
+
+                case 5:
+                    System.out.print("Введите группу: ");
+                    String group = scanner.nextLine();
+                    printStudentsByGroup(students, group);
+                    break;
+
+                case 0:
+                    System.out.println("Выход из программы...");
+                    scanner.close();
+                    return;
+
+                default:
+                    System.out.println("Неверный выбор! Попробуйте снова.");
+            }
+        }
+    }
+
+    // Список студентов заданного факультета
+    public static void printStudentsByFaculty(Student[] students, String faculty) {
+        System.out.println("\n--- Список студентов факультета '" + faculty + "' ---");
+        boolean found = false;
+        for (Student student : students) {
+            if (student != null && student.getFaculty().equalsIgnoreCase(faculty)) {
+                System.out.println(student);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("Студенты не найдены!");
+        }
+    }
+
+    // Списки студентов для каждого факультета и курса
+    public static void printStudentsByFacultyAndCourse(Student[] students) {
+        System.out.println("\n--- Списки студентов по факультетам и курсам ---");
+
+        // Получаем уникальные факультеты
+        String[] faculties = getUniqueFaculties(students);
+
+        for (String faculty : faculties) {
+            if (faculty != null) {
+                System.out.println("\nФакультет: " + faculty);
+                for (int course = 1; course <= 6; course++) {
+                    System.out.println("  Курс " + course + ":");
+                    boolean hasStudents = false;
+                    for (Student student : students) {
+                        if (student != null && student.getFaculty().equals(faculty) &&
+                                student.getCourse() == course) {
+                            System.out.println("    - " + student.getLastName() + " " +
+                                    student.getFirstName() + " " +
+                                    student.getMiddleName());
+                            hasStudents = true;
+                        }
+                    }
+                    if (!hasStudents) {
+                        System.out.println("    Нет студентов");
+                    }
+                }
+            }
+        }
+    }
+
+    // Список студентов, родившихся после заданного года
+    public static void printStudentsBornAfterYear(Student[] students, int year) {
+        System.out.println("\n--- Студенты, родившиеся после " + year + " года ---");
+        boolean found = false;
+        for (Student student : students) {
+            if (student != null && student.getBirthYear() > year) {
+                System.out.println(student);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("Студенты не найдены!");
+        }
+    }
+
+    // Список учебной группы
+    public static void printStudentsByGroup(Student[] students, String group) {
+        System.out.println("\n--- Список студентов группы '" + group + "' ---");
+        boolean found = false;
+        for (Student student : students) {
+            if (student != null && student.getGroup().equalsIgnoreCase(group)) {
+                System.out.println(student);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("Студенты не найдены!");
+        }
+    }
+
+    // Вспомогательные методы
+    private static String[] getUniqueFaculties(Student[] students) {
+        String[] temp = new String[students.length];
+        int count = 0;
+
+        for (Student student : students) {
+            if (student != null) {
+                boolean exists = false;
+                for (int i = 0; i < count; i++) {
+                    if (temp[i] != null && temp[i].equals(student.getFaculty())) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    temp[count] = student.getFaculty();
+                    count++;
+                }
+            }
+        }
+
+        String[] result = new String[count];
+        System.arraycopy(temp, 0, result, 0, count);
+        return result;
+    }
+
+    // Метод для создания тестовых данных
+    public static Student[] createTestStudents() {
+        Student[] studentsArray = new Student[5];
+
+        studentsArray[0] = new Student(1, "Нестерук", "Дмитрий", "Александрович", 2000,
+                "Пр. Октября 48а", "+375(25)626-02-77",
+                "ФАИС", 3, "ИТД-21");
+
+        studentsArray[1] = new Student(2, "Петров", "Петр", "Петрович", 2001,
+                "ул. Мира, 25", "+7-900-234-56-78",
+                "Информатика", 2, "ИВТ-201");
+
+        studentsArray[2] = new Student(3, "Сидорова", "Анна", "Сергеевна", 1999,
+                "ул. Центральная, 5", "+7-900-345-67-89",
+                "Экономика", 4, "ЭК-401");
+
+        studentsArray[3] = new Student(4, "Кузнецов", "Алексей", "Владимирович", 2002,
+                "ул. Школьная, 17", "+7-900-456-78-90",
+                "Информатика", 1, "ИВТ-101");
+
+        studentsArray[4] = new Student(5, "Смирнова", "Ольга", "Дмитриевна", 2000,
+                "ул. Садовая, 33", "+7-900-567-89-01",
+                "Экономика", 3, "ЭК-301");
+
+        return studentsArray;
+    }
+
+    // Метод для вывода всех студентов
+    public static void printAllStudents(Student[] students) {
+        System.out.println("\n--- Полный список студентов ---");
+        for (Student student : students) {
+            if (student != null) {
+                System.out.println(student);
+            }
+        }
+    }
+}
